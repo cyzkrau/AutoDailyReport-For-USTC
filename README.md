@@ -9,7 +9,7 @@
 
 **本打卡脚本仅供学习交流使用，请勿过分依赖。开发者对使用或不使用本脚本造成的问题不负任何责任，不对脚本执行效果做出任何担保，原则上不提供任何形式的技术支持。**
 
-本仓库基于[原版](https://github.com/xbb1973/USTC-ncov-AutoReport)，参考[修改版](https://github.com/Kobe972/USTC-ncov-AutoReport)并进行修改。目前正持续更新以尽量使得每一天都可以自动打卡，愿完全放开的日子早日到来。
+本仓库基于[原版](https://github.com/xbb1973/USTC-ncov-AutoReport)，参考[修改版](https://github.com/Kobe972/USTC-ncov-AutoReport)并进行修改，增加对出校申请和跨校区报备的支持。目前正持续更新以尽量使得每一天都可以自动打卡，愿完全放开的日子早日到来。
 
 ## 更新记录
 
@@ -21,9 +21,9 @@
 
 1. 将本代码仓库fork到自己的github。
 
-2. 根据自己的实际情况修改`report.py`中39行以前的数据，默认的数据为本人报备数据。
+2. 根据自己的实际情况修改`runme.py`中39行以前的数据，以及是否进行跨校区报备、出校报备申请。默认的数据为本人报备数据。
 
-3. 将修改好的代码提交到自己的仓库。如果不需要修改 `report.py`，请在 `README.md` 里添加一个空格并push，否则不会触发之后的步骤。
+3. 将修改好的代码提交到自己的仓库。如果不需要修改 `runme.py`，请在 `README.md` 里添加一个空格并push，否则不会触发之后的步骤。
 
 4. 点击Actions选项卡，点击`I understand my workflows, go ahead and enable them`.
 
@@ -31,7 +31,7 @@
 
    ![secrets](imgs/image-20200826215037042.png)
 
-6. 默认的打卡时间是每天的上午0:50，可能会有（延后）几十分钟的浮动。如需选择其它时间，可以修改`.github/workflows/report.yml`中的`cron`，详细说明参见[安排的事件](https://docs.github.com/cn/actions/reference/events-that-trigger-workflows#scheduled-events)，请注意这里使用的是**国际标准时间UTC**，北京时间的数值比它大8个小时。建议修改默认时间，避开打卡高峰期以提高成功率。
+6. 默认的打卡时间是每天的上午0:10，可能会有（延后）几十分钟的浮动。如需选择其它时间，可以修改`.github/workflows/report.yml`中的`cron`，详细说明参见[安排的事件](https://docs.github.com/cn/actions/reference/events-that-trigger-workflows#scheduled-events)，请注意这里使用的是**国际标准时间UTC**，北京时间的数值比它大8个小时。建议修改默认时间，避开打卡高峰期以提高成功率。
 
 7. 在Actions选项卡可以确认打卡情况。如果打卡失败（可能是临时网络问题等原因），脚本会自动重试，五次尝试后如果依然失败，将返回非零值提示构建失败。
 
@@ -50,16 +50,16 @@ pip install -r requirements.txt
 ### 运行打卡程序
 
 ```shell
-python report.py [STUID] [PASSWORD]
+python runme.py [STUID] [PASSWORD]
 ```
 其中，`[STUID]`是学号，`[PASSWORD]`是统一身份认证的密码明文，如
 ```shell
-python report.py "PB19890604" "FREEDOM"
+python runme.py "PB19890604" "FREEDOM"
 ```
 
 ## 打卡数据获取方法
 
-使用 F12 开发者工具抓包之后得到数据，仿照给定格式写入 `report.py` 中。
+使用 F12 开发者工具抓包之后得到数据，仿照给定格式写入 `runme.py` 中。
 
 1. 登录进入 `https://weixine.歪比巴卜.edu.cn/2020/`，打开开发者工具（Chrome 可以使用 F12 快捷键），选中 Network 窗口：
 
@@ -69,6 +69,6 @@ python report.py "PB19890604" "FREEDOM"
 
 ![](./imgs/2.png)
 
-3. 将找到的 Data 除 `_token` （每次都会改变，所以不需要复制，脚本中会每次获取新的 token 并添加到要提交的数据中）外都复制下来，存放在 `report.py` 的对应位置中。
+3. 将找到的 Data 除 `_token` （每次都会改变，所以不需要复制，脚本中会每次获取新的 token 并添加到要提交的数据中）外都复制下来，存放在 `runme.py` 的对应位置中。
 
 4. 通过push操作触发构建任务，检查上报数据是否正确。
