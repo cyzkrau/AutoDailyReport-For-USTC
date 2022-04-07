@@ -30,4 +30,4 @@ jobs:
         STUID: ${{ secrets.Stuid }}
         PASSWORD: ${{ secrets.Password }}
       run: |
-        python runme.py "$STUID" "$PASSWORD"
+        python runme.py "$STUID" "$PASSWORD" --out "$OUT" --cross "$CROSS" --report "$REPORT"

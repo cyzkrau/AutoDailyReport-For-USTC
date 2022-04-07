@@ -14,6 +14,7 @@
 ## 更新记录
 
 - 20220407：本人基于之前的脚本，并进行修改以适应现在的打卡版本
+- 20220408：在SECRET中增加是否执行操作的选项，以适应更多需求
 
 ## 使用方法
 
@@ -21,13 +22,13 @@
 
 1. 将本代码仓库fork到自己的github。
 
-2. 根据自己的实际情况修改`runme.py`中39行以前的数据，以及是否进行跨校区报备、出校报备申请。默认的数据为本人报备数据。
+2. 根据自己的实际情况修改`runme.py`中35行以前的数据，默认的数据为本人报备数据。
 
 3. 将修改好的代码提交到自己的仓库。如果不需要修改 `runme.py`，请在 `README.md` 里添加一个空格并push，否则不会触发之后的步骤。
 
 4. 点击Actions选项卡，点击`I understand my workflows, go ahead and enable them`.
 
-5. 点击Settings选项卡，点击左侧Secrets，点击New secret，创建名为`STUID`，值为自己学号的secret。用同样方法，创建名为`PASSWORD`，值为自己统一身份认证密码的secret。这两个值不会被公开。
+5. 点击Settings选项卡，点击左侧Secrets，点击New secret，创建名为`STUID`，值为自己学号的secret。用同样方法，创建名为`PASSWORD`，值为自己统一身份认证密码的secret。类似的，添加名为`OUT`,`CROSS`,`REPORT`分别用`1是0否`表示是否进行出校报备、跨校区报备、每日打卡(**注意：出校报备只负责申请，是否通过取决于审批人。且没有每日打卡的情况无法跨校区报备**)。以上数据不会被公开。
 
    ![secrets](imgs/image-20200826215037042.png)
 
@@ -50,25 +51,9 @@ pip install -r requirements.txt
 ### 运行打卡程序
 
 ```shell
-python runme.py [STUID] [PASSWORD]
+python runme.py [STUID] [PASSWORD] --out [OUT] --cross [CROSS] --report [REPORT]
 ```
-其中，`[STUID]`是学号，`[PASSWORD]`是统一身份认证的密码明文，如
+其中，`[STUID]`是学号，`[PASSWORD]`是统一身份认证的密码明文，剩下三个参数为是否出校报备、是否跨校区报备、是否每日打卡，默认不出校，跨校区，打卡。如
 ```shell
-python runme.py "PB19890604" "FREEDOM"
+python runme.py "PB19890604" "FREEDOM" --out 0 --cross 1 --report 1
 ```
-
-## 打卡数据获取方法
-
-使用 F12 开发者工具抓包之后得到数据，仿照给定格式写入 `runme.py` 中。
-
-1. 登录进入 `https://weixine.歪比巴卜.edu.cn/2020/`，打开开发者工具（Chrome 可以使用 F12 快捷键），选中 Network 窗口：
-
-![](./imgs/1.png)
-
-2. 点击确认上报，点击抓到的 `daliy_report` 请求，在 `Headers` 下面找到 `Form Data` 这就是每次上报提交的信息参数。
-
-![](./imgs/2.png)
-
-3. 将找到的 Data 除 `_token` （每次都会改变，所以不需要复制，脚本中会每次获取新的 token 并添加到要提交的数据中）外都复制下来，存放在 `runme.py` 的对应位置中。
-
-4. 通过push操作触发构建任务，检查上报数据是否正确。

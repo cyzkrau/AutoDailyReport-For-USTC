@@ -65,6 +65,7 @@ class Report(object):
                 ("_token", token),
                 ("start_date", start_date),
                 ("end_date", end_date),
+                ("t", "3"),
             ]
             post = self.login.session.post(
                 "https://weixine.ustc.edu.cn/2020/apply/daliy/post", data=data
@@ -106,6 +107,7 @@ class Report(object):
                 ("_token", token),
                 ("start_date", start_date),
                 ("end_date", end_date),
+                ("t", "2"),
             ]
             post = self.login.session.post(
                 "https://weixine.ustc.edu.cn/2020/stayinout_apply", data=data
