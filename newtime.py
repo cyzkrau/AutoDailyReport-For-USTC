@@ -23,6 +23,6 @@ im = Image.new("RGB", (shp[0] + 20, shp[1]), (254, 254, 254))
 dr = ImageDraw.Draw(im)
 font = ImageFont.truetype("arial.ttf", bbox[4])
 
-dr.text((0, 0), time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), color, font)
+dr.text((0, 0), time.strftime("%Y.%m.%d %H:%M:%S", time.localtime()), color, font)
 img[bbox[1] : bbox[3], bbox[0] : bbox[2], :] = cv2.resize(np.array(im), shp)
 cv2.imwrite("xcm.jpg", img)
