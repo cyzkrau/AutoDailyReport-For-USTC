@@ -28,30 +28,19 @@ cross_campus_data = [
     ("return_college[]", "中校区"),  # 往返校区
     ("reason", "上课"),  # 原因
 ]
-out_school_data = [
-    ("return_college[]", "蜀山区"),  # 去往的区
-    ("return_college[]", "包河区"),  # 去往的区
-    ("reason", "取快递"),  # 原因
-]
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="URC nCov auto report script.")
     parser.add_argument("stuid", help="your student number", type=str)
     parser.add_argument("password", help="your CAS password", type=str)
-    parser.add_argument("--out", help="out school or not", type=int, default=0)
-    parser.add_argument("--cross", help="cross campus or not", type=int, default=1)
-    parser.add_argument("--report", help="report or not", type=int, default=1)
     args = parser.parse_args()
     autorepoter = Report(stuid=args.stuid, password=args.password)
     count = 5
     while count != 0:
-        ret = True
-        if args.report:
-            ret = ret & autorepoter.report(report_data)
-        if args.cross:
-            ret = ret & autorepoter.cross_campus(cross_campus_data)
-        if args.out:
-            ret = ret & autorepoter.out_school(out_school_data)
-        if ret:
+        if (
+            autorepoter.report(report_data)
+            & autorepoter.upload_code()
+            & autorepoter.cross_campus(cross_campus_data)
+        ):
             print("ENJOY YOUR FREEDOM! ")
             break
         print("Retry...")

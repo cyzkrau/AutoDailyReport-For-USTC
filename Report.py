@@ -79,44 +79,41 @@ class Report(object):
         print("login failed")
         return False
 
-    def out_school(self, out_school_data):
+    def upload_code(self):
         if self.login.login():
-            data = self.login.session.get("https://weixine.ustc.edu.cn/2020").text
-            soup = BeautifulSoup(data, "html.parser")
-            headers = {
-                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39"
-            }
             data = self.login.session.get(
-                "https://weixine.ustc.edu.cn/2020/apply/daliy", headers=headers
+                "https://weixine.ustc.edu.cn/2020/upload/xcm"
             ).text
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
             token = soup.find("input", {"name": "_token"})["value"]
-            data = self.login.session.get(
-                "https://weixine.ustc.edu.cn/2020/stayinout_apply?t=2", headers=headers
-            ).text
-            data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
-            soup = BeautifulSoup(data, "html.parser")
+            import newtime
 
-            choose_ds = soup.find("select", {"id": "choose_ds"})
-            choose_ds = str(choose_ds.contents[1]).split('"')[1]
-            end_date = soup.find("input", {"id": "end_date"})["value"]
-            start_date = soup.find("input", {"id": "start_date"})["value"]
-            data = out_school_data + [
-                ("choose_ds", choose_ds),
-                ("_token", token),
-                ("start_date", start_date),
-                ("end_date", end_date),
-                ("t", "2"),
-            ]
-            post = self.login.session.post(
-                "https://weixine.ustc.edu.cn/2020/stayinout_apply", data=data
-            )
-            if "?t=t" in post.url:
-                print("out school successful!")
+            def run_update(fnm, n):
+                data = [
+                    ("_token", token),
+                    ("id", "WU_FILE_0"),
+                ]
+                files = {
+                    "file": (
+                        fnm,
+                        open(fnm, "rb"),
+                        "image/jpeg",
+                        {},
+                    )
+                }
+                post = self.login.session.post(
+                    "https://weixine.ustc.edu.cn/2020/upload/" + str(n) + "/image",
+                    data=data,
+                    files=files,
+                )
+                if "true" not in post.text:
+                    print("update failed")
+                    return False
                 return True
-            else:
-                print("out school failed")
-                return False
+
+            if run_update("xcm.jpg", 1) & run_update("akm.jpg", 2):
+                print("update successful")
+                return True
         print("login failed")
         return False

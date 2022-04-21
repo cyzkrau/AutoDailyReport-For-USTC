@@ -29,8 +29,5 @@ jobs:
       env:
         STUID: ${{ secrets.Stuid }}
         PASSWORD: ${{ secrets.Password }}
-        OUT: ${{ secrets.Out }}
-        CROSS: ${{ secrets.Cross }}
-        REPORT: ${{ secrets.Report }}
       run: |
-        python runme.py "$STUID" "$PASSWORD" --out "$OUT" --cross "$CROSS" --report "$REPORT"
+        python runme.py "$STUID" "$PASSWORD"
