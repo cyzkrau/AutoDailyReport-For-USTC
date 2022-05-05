@@ -15,12 +15,12 @@ SHA_TZ = timezone(  # 北京时间
 
 
 class Report(object):
+
     def __init__(self, stuid, password):
         self.stuid = stuid
         self.password = password
-        self.login = Login(
-            self.stuid, self.password, "https://weixine.ustc.edu.cn/2020/caslogin"
-        )
+        self.login = Login(self.stuid, self.password,
+                           "https://weixine.ustc.edu.cn/2020/caslogin")
 
     def report(self, report_data):
         if self.login.login():
@@ -43,20 +43,22 @@ class Report(object):
 
     def cross_campus(self, cross_campus_data):
         if self.login.login():
-            data = self.login.session.get("https://weixine.ustc.edu.cn/2020").text
+            data = self.login.session.get(
+                "https://weixine.ustc.edu.cn/2020").text
             soup = BeautifulSoup(data, "html.parser")
             headers = {
-                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39"
+                "user-agent":
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39"
             }
             data = self.login.session.get(
-                "https://weixine.ustc.edu.cn/2020/apply/daliy", headers=headers
-            ).text
+                "https://weixine.ustc.edu.cn/2020/apply/daliy",
+                headers=headers).text
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
             token = soup.find("input", {"name": "_token"})["value"]
             data = self.login.session.get(
-                "https://weixine.ustc.edu.cn/2020/apply/daliy/i?t=3", headers=headers
-            ).text
+                "https://weixine.ustc.edu.cn/2020/apply/daliy/i?t=3",
+                headers=headers).text
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
             start_date = soup.find("input", {"id": "start_date"})["value"]
@@ -68,8 +70,7 @@ class Report(object):
                 ("t", "3"),
             ]
             post = self.login.session.post(
-                "https://weixine.ustc.edu.cn/2020/apply/daliy/post", data=data
-            )
+                "https://weixine.ustc.edu.cn/2020/apply/daliy/post", data=data)
             if "?t=d" in post.url:
                 print("cross school successful!")
                 return True
@@ -79,11 +80,49 @@ class Report(object):
         print("login failed")
         return False
 
+    def out_school(self, out_school_data):
+        if self.login.login():
+            data = self.login.session.get(
+                "https://weixine.ustc.edu.cn/2020").text
+            soup = BeautifulSoup(data, "html.parser")
+            headers = {
+                "user-agent":
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39"
+            }
+            data = self.login.session.get(
+                "https://weixine.ustc.edu.cn/2020/apply/daliy",
+                headers=headers).text
+            data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
+            soup = BeautifulSoup(data, "html.parser")
+            token = soup.find("input", {"name": "_token"})["value"]
+            data = self.login.session.get(
+                "https://weixine.ustc.edu.cn/2020/apply/daliy/i?t=2",
+                headers=headers).text
+            data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
+            soup = BeautifulSoup(data, "html.parser")
+            start_date = soup.find("input", {"id": "start_date"})["value"]
+            end_date = soup.find("input", {"id": "end_date"})["value"]
+            data = out_school_data + [
+                ("_token", token),
+                ("start_date", start_date),
+                ("end_date", end_date),
+                ("t", "2"),
+            ]
+            post = self.login.session.post(
+                "https://weixine.ustc.edu.cn/2020/apply/daliy/post", data=data)
+            if "?t=d" in post.url:
+                print("out school successful!")
+                return True
+            else:
+                print("out school failed")
+                return False
+        print("login failed")
+        return False
+
     def upload_code(self):
         if self.login.login():
             data = self.login.session.get(
-                "https://weixine.ustc.edu.cn/2020/upload/xcm"
-            ).text
+                "https://weixine.ustc.edu.cn/2020/upload/xcm").text
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
             token = soup.find("input", {"name": "_token"})["value"]
@@ -103,7 +142,8 @@ class Report(object):
                     )
                 }
                 post = self.login.session.post(
-                    "https://weixine.ustc.edu.cn/2020/upload/" + str(n) + "/image",
+                    "https://weixine.ustc.edu.cn/2020/upload/" + str(n) +
+                    "/image",
                     data=data,
                     files=files,
                 )
