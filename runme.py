@@ -40,8 +40,11 @@ if __name__ == "__main__":
         description="URC nCov auto report script.")
     parser.add_argument("stuid", help="your student number", type=str)
     parser.add_argument("password", help="your CAS password", type=str)
+    parser.add_argument("gid", help="your gid number", type=str)
     args = parser.parse_args()
-    autorepoter = Report(stuid=args.stuid, password=args.password)
+    autorepoter = Report(stuid=args.stuid,
+                         password=args.password,
+                         gid=args.gid)
     count = 5
     while count != 0:
         if (autorepoter.report(report_data)

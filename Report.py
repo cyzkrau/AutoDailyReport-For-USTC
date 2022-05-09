@@ -16,9 +16,10 @@ SHA_TZ = timezone(  # 北京时间
 
 class Report(object):
 
-    def __init__(self, stuid, password):
+    def __init__(self, stuid, password, gid):
         self.stuid = stuid
         self.password = password
+        self.gid = gid
         self.login = Login(self.stuid, self.password,
                            "https://weixine.ustc.edu.cn/2020/caslogin")
 
@@ -51,16 +52,11 @@ class Report(object):
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39"
             }
             data = self.login.session.get(
-                "https://weixine.ustc.edu.cn/2020/apply/daliy",
-                headers=headers).text
-            data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
-            soup = BeautifulSoup(data, "html.parser")
-            token = soup.find("input", {"name": "_token"})["value"]
-            data = self.login.session.get(
                 "https://weixine.ustc.edu.cn/2020/apply/daliy/i?t=3",
                 headers=headers).text
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
+            token = soup.find("input", {"name": "_token"})["value"]
             start_date = soup.find("input", {"id": "start_date"})["value"]
             end_date = soup.find("input", {"id": "end_date"})["value"]
             data = cross_campus_data + [
@@ -70,12 +66,13 @@ class Report(object):
                 ("t", "3"),
             ]
             post = self.login.session.post(
-                "https://weixine.ustc.edu.cn/2020/apply/daliy/post", data=data)
+                "https://weixine.ustc.edu.cn/2020/apply/daliy/ipost",
+                data=data)
             if "?t=d" in post.url:
-                print("cross school successful!")
+                print("cross campus successful!")
                 return True
             else:
-                print("cross school failed")
+                print("cross campus failed")
                 return False
         print("login failed")
         return False
@@ -90,16 +87,11 @@ class Report(object):
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39"
             }
             data = self.login.session.get(
-                "https://weixine.ustc.edu.cn/2020/apply/daliy",
-                headers=headers).text
-            data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
-            soup = BeautifulSoup(data, "html.parser")
-            token = soup.find("input", {"name": "_token"})["value"]
-            data = self.login.session.get(
                 "https://weixine.ustc.edu.cn/2020/apply/daliy/i?t=2",
                 headers=headers).text
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
+            token = soup.find("input", {"name": "_token"})["value"]
             start_date = soup.find("input", {"id": "start_date"})["value"]
             end_date = soup.find("input", {"id": "end_date"})["value"]
             data = out_school_data + [
@@ -109,7 +101,8 @@ class Report(object):
                 ("t", "2"),
             ]
             post = self.login.session.post(
-                "https://weixine.ustc.edu.cn/2020/apply/daliy/post", data=data)
+                "https://weixine.ustc.edu.cn/2020/apply/daliy/ipost",
+                data=data)
             if "?t=d" in post.url:
                 print("out school successful!")
                 return True
@@ -131,6 +124,7 @@ class Report(object):
             def run_update(fnm, n):
                 data = [
                     ("_token", token),
+                    ("gid", self.gid),
                     ("id", "WU_FILE_0"),
                 ]
                 files = {
@@ -143,7 +137,7 @@ class Report(object):
                 }
                 post = self.login.session.post(
                     "https://weixine.ustc.edu.cn/2020/upload/" + str(n) +
-                    "/image",
+                    "/healthimg",
                     data=data,
                     files=files,
                 )
