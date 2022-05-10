@@ -18,6 +18,7 @@
 - 20220421: 增加每日上传两码功能
 - 20220506: **恭喜解封**，源代码可用，但增加每日出校报备
 - 20220509: 解决打卡系统post链接被修改，上传两码需要GID的问题
+- 20220510: 解决上传两码需要sign的问题
 
 ## 使用方法
 
@@ -31,7 +32,7 @@
 
 4. 点击Actions选项卡，点击`I understand my workflows, go ahead and enable them`.
 
-5. 点击Settings选项卡，点击左侧Secrets，点击New secret，创建名为`STUID`，值为自己学号的secret。用同样方法，创建名为`PASSWORD`，值为自己统一身份认证密码的secret，创建名为`GID`，值为自己校园卡的GID号。以上数据不会被公开。
+5. 点击Settings选项卡，点击左侧Secrets，点击New secret，创建名为`STUID`，值为自己学号的secret。用同样方法，创建名为`PASSWORD`，值为自己统一身份认证密码的secret。以上数据不会被公开。
 
    ![secrets](imgs/image-20200826215037042.png)
 

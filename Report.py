@@ -16,10 +16,9 @@ SHA_TZ = timezone(  # 北京时间
 
 class Report(object):
 
-    def __init__(self, stuid, password, gid):
+    def __init__(self, stuid, password):
         self.stuid = stuid
         self.password = password
-        self.gid = gid
         self.login = Login(self.stuid, self.password,
                            "https://weixine.ustc.edu.cn/2020/caslogin")
 
@@ -117,15 +116,18 @@ class Report(object):
             data = self.login.session.get(
                 "https://weixine.ustc.edu.cn/2020/upload/xcm").text
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
-            soup = BeautifulSoup(data, "html.parser")
-            token = soup.find("input", {"name": "_token"})["value"]
+            token = data.split("_token")[-1].split("'")[1]
+            sign = data.split("sign")[-1].split("'")[2]
+            gid = data.split("gid")[-1].split("'")[2]
             import newtime
 
-            def run_update(fnm, n):
+            def run_update(fnm, t):
                 data = [
                     ("_token", token),
-                    ("gid", self.gid),
+                    ("gid", gid),
+                    ("t", t),
                     ("id", "WU_FILE_0"),
+                    ("sign", sign),
                 ]
                 files = {
                     "file": (
@@ -136,8 +138,7 @@ class Report(object):
                     )
                 }
                 post = self.login.session.post(
-                    "https://weixine.ustc.edu.cn/2020/upload/" + str(n) +
-                    "/healthimg",
+                    "https://weixine.ustc.edu.cn/2020img/api/upload_for_student",
                     data=data,
                     files=files,
                 )
