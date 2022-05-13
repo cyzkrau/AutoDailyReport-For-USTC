@@ -19,14 +19,15 @@
 - 20220506: **恭喜解封**，源代码可用，但增加每日出校报备
 - 20220509: 解决打卡系统post链接被修改，上传两码需要GID的问题
 - 20220510: 解决上传两码需要sign的问题
+- 20220513: **恭喜自动授权安康码**，不再需要自动上传安康码
 
 ## 使用方法
 
 0. **写在前面：请在自己fork的仓库中修改，并push到自己的仓库，不要直接修改本仓库，也不要将您的修改pull request到本仓库（对本仓库的改进除外）！如果尚不了解github的基本使用方法，请参阅[使用议题和拉取请求进行协作/使用复刻](https://docs.github.com/cn/github/collaborating-with-issues-and-pull-requests/working-with-forks)和[使用议题和拉取请求进行协作/通过拉取请求提议工作更改](https://docs.github.com/cn/github/collaborating-with-issues-and-pull-requests/proposing-changes-to-your-work-with-pull-requests)。**
 
-1. 将本代码仓库fork到自己的github。
+1. 将本代码仓库fork到自己的github，并授权打卡系统从权威机构获取安康码信息。
 
-2. 根据自己的实际情况修改`runme.py`中37行以前的数据，修改`akm.jpg`和`xcm.jpg`为自己的行程码和安康码，更改`newtime.py`中<code>bbox</code>数据使得更新的时间数据可以以假乱真。
+2. 根据自己的实际情况修改`runme.py`中37行以前的数据，修改`xcm.jpg`为自己的行程码，更改`newtime.py`中<code>bbox</code>数据使得更新的时间数据可以以假乱真。
 
 3. 将修改好的代码提交到自己的仓库。
 
@@ -36,7 +37,7 @@
 
    ![secrets](imgs/image-20200826215037042.png)
 
-6. 默认的打卡时间是每天的上午0:10，可能会有（延后）几十分钟的浮动。如需选择其它时间，可以修改`.github/workflows/report.yml`中的`cron`，详细说明参见[安排的事件](https://docs.github.com/cn/actions/reference/events-that-trigger-workflows#scheduled-events)，请注意这里使用的是**国际标准时间UTC**，北京时间的数值比它大8个小时。建议修改默认时间，避开打卡高峰期以提高成功率。
+6. 默认的打卡时间是每天的上午5:10(建议5点之后，因为5点才会同步安康码)，可能会有（延后）几十分钟的浮动。如需选择其它时间，可以修改`.github/workflows/report.yml`中的`cron`，详细说明参见[安排的事件](https://docs.github.com/cn/actions/reference/events-that-trigger-workflows#scheduled-events)，请注意这里使用的是**国际标准时间UTC**，北京时间的数值比它大8个小时。建议修改默认时间，避开打卡高峰期以提高成功率。
 
 7. 在Actions选项卡可以确认打卡情况。如果打卡失败（可能是临时网络问题等原因），脚本会自动重试，五次尝试后如果依然失败，将返回非零值提示构建失败。
 

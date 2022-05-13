@@ -147,7 +147,8 @@ class Report(object):
                     return False
                 return True
 
-            if run_update("xcm.jpg", 1) & run_update("akm.jpg", 2):
+            # if run_update("xcm.jpg", 1) & run_update("akm.jpg", 2):
+            if run_update("xcm.jpg", 1):
                 print("update successful")
                 return True
         print("login failed")
