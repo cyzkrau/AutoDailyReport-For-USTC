@@ -43,6 +43,8 @@
 
 8. 在Github个人设置页面的Notifications下可以设置Github Actions的通知，建议打开Email通知，并勾选"Send notifications for failed workflows only"。请及时查看邮件，如果失败会进行通知。
 
+9. 如果觉得这个仓库对你有用的话，给个星星✨吧～
+
 ## 在本地运行测试
 
 要在本地运行测试，需要安装python 3。我们假设您已经安装了python 3和pip 3，并已将其路径添加到环境变量。
