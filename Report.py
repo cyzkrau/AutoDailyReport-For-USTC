@@ -1,18 +1,9 @@
-import time
-import re
 from bs4 import BeautifulSoup
-import json
-import pytz
 from ustclogin import Login
-from datetime import datetime
-from datetime import timedelta
-from datetime import timezone
+import time
 
-SHA_TZ = timezone(  # 北京时间
-    timedelta(hours=8),
-    name="Asia/Shanghai",
-)
-
+start_date = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()+8*3600))
+end_date = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+8*3600))
 
 class Report(object):
 
@@ -21,6 +12,14 @@ class Report(object):
         self.password = password
         self.login = Login(self.stuid, self.password,
                            "https://weixine.ustc.edu.cn/2020/caslogin")
+
+    def getstate(self):
+        if self.login.login():
+            data = self.login.result.text
+            soup = BeautifulSoup(data, "html.parser")
+            return soup.find("p", {"style":"margin: 5px -10px 0;"}).contents[1].contents[0]
+        print("login failed")
+        return False
 
     def report(self, report_data):
         if self.login.login():
@@ -56,8 +55,6 @@ class Report(object):
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
             token = soup.find("input", {"name": "_token"})["value"]
-            start_date = soup.find("input", {"id": "start_date"})["value"]
-            end_date = soup.find("input", {"id": "end_date"})["value"]
             data = cross_campus_data + [
                 ("_token", token),
                 ("start_date", start_date),
@@ -91,8 +88,6 @@ class Report(object):
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
             token = soup.find("input", {"name": "_token"})["value"]
-            start_date = soup.find("input", {"id": "start_date"})["value"]
-            end_date = soup.find("input", {"id": "end_date"})["value"]
             data = out_school_data + [
                 ("_token", token),
                 ("start_date", start_date),

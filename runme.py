@@ -44,6 +44,10 @@ if __name__ == "__main__":
     autorepoter = Report(stuid=args.stuid, password=args.password)
     count = 5
     while count != 0:
+        state = autorepoter.getstate()
+        if '在校' != state[:2]:
+            print("NOW STATE " + state)
+            exit(0)
         if (autorepoter.report(report_data)
                 & autorepoter.upload_code()
                 & autorepoter.cross_campus(cross_campus_data)
