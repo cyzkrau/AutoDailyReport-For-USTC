@@ -3,7 +3,7 @@ from ustclogin import Login
 import time
 
 start_date = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()+8*3600))
-end_date = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+8*3600))
+end_date = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+32*3600))
 
 class Report(object):
 
@@ -112,6 +112,9 @@ class Report(object):
         if self.login.login():
             data = self.login.session.get(
                 "https://weixine.ustc.edu.cn/2020/upload/xcm").text
+            if '关闭相关功能' in data:
+                print("bad upload code time")
+                return False
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             token = data.split("_token")[-1].split("'")[1]
             sign = data.split("sign")[-1].split("'")[2]

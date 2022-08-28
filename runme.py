@@ -50,8 +50,9 @@ if __name__ == "__main__":
             exit(0)
         if (autorepoter.report(report_data)
                 & autorepoter.upload_code()
-                & autorepoter.cross_campus(cross_campus_data)
-                & autorepoter.out_school(out_school_data)):
+                # & autorepoter.cross_campus(cross_campus_data)
+                # & autorepoter.out_school(out_school_data)
+        ):
             print("ENJOY YOUR FREEDOM! ")
             break
         print("Retry...")
