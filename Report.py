@@ -55,7 +55,7 @@ class Report(object):
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
             token = soup.find("input", {"name": "_token"})["value"]
-            data = cross_campus_data + [
+            post_data = cross_campus_data + [
                 ("_token", token),
                 ("start_date", start_date),
                 ("end_date", end_date),
@@ -63,12 +63,13 @@ class Report(object):
             ]
             post = self.login.session.post(
                 "https://weixine.ustc.edu.cn/2020/apply/daliy/ipost",
-                data=data)
+                data=post_data)
             if "?t=d" in post.url:
                 print("cross campus successful!")
                 return True
             else:
                 print("cross campus failed")
+                print(data)
                 return False
         print("login failed")
         return False
@@ -88,7 +89,7 @@ class Report(object):
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
             token = soup.find("input", {"name": "_token"})["value"]
-            data = out_school_data + [
+            post_data = out_school_data + [
                 ("_token", token),
                 ("start_date", start_date),
                 ("end_date", end_date),
@@ -96,12 +97,13 @@ class Report(object):
             ]
             post = self.login.session.post(
                 "https://weixine.ustc.edu.cn/2020/apply/daliy/ipost",
-                data=data)
+                data=post_data)
             if "?t=d" in post.url:
                 print("out school successful!")
                 return True
             else:
                 print("out school failed")
+                print(data)
                 return False
         print("login failed")
         return False
