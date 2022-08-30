@@ -1,9 +1,13 @@
+from posixpath import split
 from bs4 import BeautifulSoup
 from ustclogin import Login
 import time
 
-start_date = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()+8*3600))
+start_date = time.strftime("%Y-%m-%d 07:00:00",time.localtime(time.time()+32*3600))
 end_date = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+32*3600))
+nowday = time.mktime(time.strptime(end_date, "%Y-%m-%d %H:%M:%S"))
+monday = time.mktime(time.strptime("2017-01-01 23:59:59", "%Y-%m-%d %H:%M:%S"))
+nextday = int(nowday - monday) // (24 * 3600) % 7
 
 class Report(object):
 
@@ -65,6 +69,47 @@ class Report(object):
                 "https://weixine.ustc.edu.cn/2020/apply/daliy/ipost",
                 data=post_data)
             if "?t=d" in post.url:
+                print("cross campus successful!")
+                return True
+            else:
+                print("cross campus failed")
+                print(data)
+                return False
+        print("login failed")
+        return False
+
+    def apply_cross_campus(self, cross_campus_data):
+        if self.login.login():
+            data = self.login.session.get(
+                "https://weixine.ustc.edu.cn/2020").text
+            soup = BeautifulSoup(data, "html.parser")
+            headers = {
+                "user-agent":
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39"
+            }
+            data = self.login.session.get(
+                "https://weixine.ustc.edu.cn/2020/stayinout_apply?t=3",
+                headers=headers).text
+            soup = BeautifulSoup(data, "html.parser")
+            xck = soup.find("input", {"name": "files_xck"})["value"]
+            akm = soup.find("input", {"name": "files_akm"})["value"]
+            hs = soup.find("input", {"name": "files_hs"})["value"]
+            token = soup.find("input", {"name": "_token"})["value"]
+            choose_ds = data.split('<option value="')[1].split('"')[0]
+            post_data = cross_campus_data + [
+                ("_token", token),
+                ("start_date", start_date),
+                ("end_date", end_date),
+                ("choose_ds", choose_ds),
+                ("t", "3"),
+                ("files_xck", xck),
+                ("files_akm", akm),
+                ("files_hs", hs),
+            ]
+            post = self.login.session.post(
+                "https://weixine.ustc.edu.cn/2020/stayinout_apply",
+                data=post_data)
+            if post.url[-3:] == 't=t':
                 print("cross campus successful!")
                 return True
             else:
@@ -153,3 +198,7 @@ class Report(object):
                 return True
         print("login failed")
         return False
+
+if __name__ == '__main__':
+    print(end_date)
+    print(nextday)
