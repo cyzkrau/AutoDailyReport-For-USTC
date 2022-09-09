@@ -1,10 +1,9 @@
-from posixpath import split
 from bs4 import BeautifulSoup
 from ustclogin import Login
 import time
 
-start_date = time.strftime("%Y-%m-%d 07:00:00",time.localtime(time.time()+32*3600))
-end_date = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+32*3600))
+start_date = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()+8*3600))
+end_date = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+8*3600))
 nowday = time.mktime(time.strptime(end_date, "%Y-%m-%d %H:%M:%S"))
 monday = time.mktime(time.strptime("2017-01-01 23:59:59", "%Y-%m-%d %H:%M:%S"))
 nextday = int(nowday - monday) // (24 * 3600) % 7

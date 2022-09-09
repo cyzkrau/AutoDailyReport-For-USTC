@@ -24,8 +24,8 @@ cross_campus_data = [
     ("return_college[]", "东校区"),  # 往返校区
     ("return_college[]", "西校区"),  # 往返校区
     ("return_college[]", "中校区"),  # 往返校区
-    ("start_day", "2"),  # 申请明天
-    ("reason", "上课，模拟与数字电路"),  # 原因
+    # ("start_day", "2"),  # 申请明天
+    ("reason", "上课"),  # 原因
 ]
 out_school_data = [
     ("return_college[]", "蜀山区"),  # 目的地
@@ -49,8 +49,10 @@ if __name__ == "__main__":
             print("NOW STATE " + state)
             exit(0)
         work = autorepoter.report(report_data) & autorepoter.upload_code()
-        if nextday in croos_campus_dates:
-            work = work & autorepoter.apply_cross_campus(cross_campus_data)
+        work = work & autorepoter.cross_campus(cross_campus_data)
+        work = work & autorepoter.out_school(out_school_data)
+        # if nextday in croos_campus_dates:
+        #     work = work & autorepoter.apply_cross_campus(cross_campus_data)
         # if nextday == 10:
         #     work = work & autorepoter.out_school(out_school_data)
         if work:
