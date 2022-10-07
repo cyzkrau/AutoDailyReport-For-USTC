@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
 from ustclogin import Login
 import time
+from newtime import create
 
-start_date = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()+8*3600))
+start_date = time.strftime("%Y-%m-%d 06:00:00",time.localtime(time.time()+8*3600))
 end_date = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+8*3600))
 nowday = time.mktime(time.strptime(end_date, "%Y-%m-%d %H:%M:%S"))
 monday = time.mktime(time.strptime("2017-01-01 23:59:59", "%Y-%m-%d %H:%M:%S"))
@@ -55,6 +56,8 @@ class Report(object):
             data = self.login.session.get(
                 "https://weixine.ustc.edu.cn/2020/apply/daliy/i?t=3",
                 headers=headers).text
+            if "关闭进出校报备" in data:
+                raise ValueError("change method")
             data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
             soup = BeautifulSoup(data, "html.parser")
             token = soup.find("input", {"name": "_token"})["value"]
@@ -95,15 +98,18 @@ class Report(object):
             hs = soup.find("input", {"name": "files_hs"})["value"]
             token = soup.find("input", {"name": "_token"})["value"]
             choose_ds = data.split('<option value="')[1].split('"')[0]
+            sd = time.strftime("%Y-%m-%d 06:00:00",time.localtime(time.time()+32*3600))
+            ed = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+32*3600))
             post_data = cross_campus_data + [
                 ("_token", token),
-                ("start_date", start_date),
-                ("end_date", end_date),
+                ("start_date", sd),
+                ("end_date", ed),
                 ("choose_ds", choose_ds),
                 ("t", "3"),
                 ("files_xck", xck),
                 ("files_akm", akm),
                 ("files_hs", hs),
+                ("start_day", "2"), 
             ]
             post = self.login.session.post(
                 "https://weixine.ustc.edu.cn/2020/stayinout_apply",
@@ -113,7 +119,9 @@ class Report(object):
                 return True
             else:
                 print("cross campus failed")
-                print(data)
+                f = open("./log.html", 'w')
+                f.write(data)
+                f.close()
                 return False
         print("login failed")
         return False
@@ -152,7 +160,7 @@ class Report(object):
         print("login failed")
         return False
 
-    def upload_code(self):
+    def upload_code(self, number):
         if self.login.login():
             data = self.login.session.get(
                 "https://weixine.ustc.edu.cn/2020/upload/xcm").text
@@ -163,7 +171,7 @@ class Report(object):
             token = data.split("_token")[-1].split("'")[1]
             sign = data.split("sign")[-1].split("'")[2]
             gid = data.split("gid")[-1].split("'")[2]
-            import newtime
+            create(number)
 
             def run_update(fnm, t):
                 data = [

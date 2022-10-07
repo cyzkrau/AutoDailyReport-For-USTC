@@ -1,4 +1,5 @@
 import argparse
+import random
 from Report import *
 
 report_data = [
@@ -24,7 +25,6 @@ cross_campus_data = [
     ("return_college[]", "东校区"),  # 往返校区
     ("return_college[]", "西校区"),  # 往返校区
     ("return_college[]", "中校区"),  # 往返校区
-    # ("start_day", "2"),  # 申请明天
     ("reason", "上课"),  # 原因
 ]
 out_school_data = [
@@ -34,7 +34,10 @@ out_school_data = [
     ("return_college[]", "庐阳区"),  # 目的地
     ("reason", "玩"),  # 原因
 ]
-croos_campus_dates = [2, 4] # 申请跨校区的日期, 这里表示星期2和4要申请
+number = "187****5065"
+course = ["泛函分析", "组合", "拓扑"]
+croos_campus_dates = [1,2,3,4,5,6] # 申请跨校区的日期
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="URC nCov auto report script.")
@@ -48,13 +51,16 @@ if __name__ == "__main__":
         if '在校' != state[:2]:
             print("NOW STATE " + state)
             exit(0)
-        work = autorepoter.report(report_data) & autorepoter.upload_code()
-        work = work & autorepoter.cross_campus(cross_campus_data)
-        work = work & autorepoter.out_school(out_school_data)
-        # if nextday in croos_campus_dates:
-        #     work = work & autorepoter.apply_cross_campus(cross_campus_data)
-        # if nextday == 10:
-        #     work = work & autorepoter.out_school(out_school_data)
+        work = autorepoter.report(report_data) & autorepoter.upload_code(number)
+
+        try:
+            work = work & autorepoter.cross_campus(cross_campus_data)
+            work = work & autorepoter.out_school(out_school_data)
+        except Exception:
+            cross_campus_data[-1] = ("reason", "上" + random.sample(course, 1)[0] + "课")
+            print(cross_campus_data)
+            work = work & autorepoter.apply_cross_campus(cross_campus_data)
+            
         if work:
             print("ENJOY YOUR FREEDOM! ")
             break
