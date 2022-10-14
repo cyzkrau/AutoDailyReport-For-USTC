@@ -36,7 +36,7 @@ out_school_data = [
 ]
 number = "187****5065"
 course = ["泛函分析", "组合", "拓扑"]
-croos_campus_dates = [1,2,3,4,5,6] # 申请跨校区的日期
+croos_campus_dates = [1,3,4,6,7] # 申请跨校区的日期
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -57,9 +57,10 @@ if __name__ == "__main__":
             work = work & autorepoter.cross_campus(cross_campus_data)
             work = work & autorepoter.out_school(out_school_data)
         except Exception:
-            cross_campus_data[-1] = ("reason", "上" + random.sample(course, 1)[0] + "课")
-            print(cross_campus_data)
-            work = work & autorepoter.apply_cross_campus(cross_campus_data)
+            if today % 7 + 1 in croos_campus_dates:
+                cross_campus_data[-1] = ("reason", "上" + random.sample(course, 1)[0] + "课")
+                print(cross_campus_data)
+                work = work & autorepoter.apply_cross_campus(cross_campus_data)
             
         if work:
             print("ENJOY YOUR FREEDOM! ")
