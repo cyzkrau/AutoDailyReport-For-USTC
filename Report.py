@@ -110,7 +110,7 @@ class Report(object):
                 ("files_xck", xck),
                 ("files_akm", akm),
                 ("files_hs", hs),
-                ("files_hs", hs2),
+                ("files_hs2", hs2),
                 ("start_day", "2"), 
             ]
             post = self.login.session.post(
