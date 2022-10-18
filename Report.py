@@ -96,6 +96,7 @@ class Report(object):
             xck = soup.find("input", {"name": "files_xck"})["value"]
             akm = soup.find("input", {"name": "files_akm"})["value"]
             hs = soup.find("input", {"name": "files_hs"})["value"]
+            hs2 = soup.find("input", {"name": "files_hs2"})["value"]
             token = soup.find("input", {"name": "_token"})["value"]
             choose_ds = data.split('<option value="')[1].split('"')[0]
             sd = time.strftime("%Y-%m-%d 06:00:00",time.localtime(time.time()+32*3600))
@@ -109,6 +110,7 @@ class Report(object):
                 ("files_xck", xck),
                 ("files_akm", akm),
                 ("files_hs", hs),
+                ("files_hs", hs2),
                 ("start_day", "2"), 
             ]
             post = self.login.session.post(
