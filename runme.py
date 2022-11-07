@@ -55,12 +55,12 @@ if __name__ == "__main__":
 
         try:
             # work = work & autorepoter.cross_campus(cross_campus_data)
-            work = work & autorepoter.out_school(out_school_data)
+            work = autorepoter.out_school(out_school_data)
         except Exception:
             if today % 7 + 1 in croos_campus_dates:
                 cross_campus_data[-1] = ("reason", "上" + random.sample(course, 1)[0] + "课")
                 print(cross_campus_data)
-                work = work & autorepoter.apply_cross_campus(cross_campus_data)
+                work = autorepoter.apply_cross_campus(cross_campus_data)
             
         if work:
             print("ENJOY YOUR FREEDOM! ")

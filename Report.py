@@ -140,7 +140,7 @@ class Report(object):
             data = self.login.session.get(
                 "https://weixine.ustc.edu.cn/2020/apply/daliy/i?t=2",
                 headers=headers).text
-            data = data.encode("ascii", "ignore").decode("utf-8", "ignore")
+            morehs = ("未检测到昨日核酸检测结果，请自行上传" in data)
             soup = BeautifulSoup(data, "html.parser")
             token = soup.find("input", {"name": "_token"})["value"]
             post_data = out_school_data + [
@@ -149,6 +149,29 @@ class Report(object):
                 ("end_date", end_date),
                 ("t", "2"),
             ]
+            if morehs:
+                gid = data.split("gid")[-1].split("'")[2]
+                sign = data.split("sign")[-1].split("'")[2]
+                p = self.login.session.post(
+                    "https://weixine.ustc.edu.cn/2020img/api/upload", 
+                    data=[
+                        ("_token", token),
+                        ("gid", gid),
+                        ("sign", sign),
+                        ("id", "WU_FILE_0"),
+                        ("name", "xcm.jpg"),
+                    ],
+                    files={
+                        "file": (
+                            "xcm.jpg",
+                            open("xcm.jpg", "rb"),
+                            "image/jpeg",
+                            {},
+                        )
+                    }
+                )
+                print('upload hesuannnn')
+                post_data.append(("files_hs3", "".join(p.text.split('"id":"')[-1].split('"')[0].split('\\'))))
             post = self.login.session.post(
                 "https://weixine.ustc.edu.cn/2020/apply/daliy/ipost",
                 data=post_data)
