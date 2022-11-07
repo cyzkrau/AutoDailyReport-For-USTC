@@ -54,7 +54,7 @@ if __name__ == "__main__":
         work = autorepoter.report(report_data) & autorepoter.upload_code(number)
 
         try:
-            work = work & autorepoter.cross_campus(cross_campus_data)
+            # work = work & autorepoter.cross_campus(cross_campus_data)
             work = work & autorepoter.out_school(out_school_data)
         except Exception:
             if today % 7 + 1 in croos_campus_dates:
