@@ -94,12 +94,15 @@ class Report(object):
                 headers=headers).text
             soup = BeautifulSoup(data, "html.parser")
             xck = soup.find("input", {"name": "files_xck"})["value"]
+            xck_time = soup.find("input", {"name": "xck_time"})["value"]
             akm = soup.find("input", {"name": "files_akm"})["value"]
-            hs = soup.find("input", {"name": "files_hs"})["value"]
+            akm_time = soup.find("input", {"name": "akm_time"})["value"]
+            # hs = soup.find("input", {"name": "files_hs"})["value"]
             hs2 = soup.find("input", {"name": "files_hs2"})["value"]
+            hs2_time = soup.find("input", {"name": "hs2_time"})["value"]
             token = soup.find("input", {"name": "_token"})["value"]
             choose_ds = data.split('<option value="')[1].split('"')[0]
-            sd = time.strftime("%Y-%m-%d 06:00:00",time.localtime(time.time()+32*3600))
+            sd = time.strftime("%Y-%m-%d 00:00:00",time.localtime(time.time()+32*3600))
             ed = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+32*3600))
             post_data = cross_campus_data + [
                 ("_token", token),
@@ -109,8 +112,11 @@ class Report(object):
                 ("t", "3"),
                 ("files_xck", xck),
                 ("files_akm", akm),
-                ("files_hs", hs),
+                # ("files_hs", hs),
                 ("files_hs2", hs2),
+                ("xck_time", xck_time), 
+                ("akm_time", akm_time), 
+                ("hs2_time", hs2_time), 
                 ("start_day", "2"), 
             ]
             post = self.login.session.post(
