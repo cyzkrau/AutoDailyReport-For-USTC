@@ -102,8 +102,14 @@ class Report(object):
             hs2_time = soup.find("input", {"name": "hs2_time"})["value"]
             token = soup.find("input", {"name": "_token"})["value"]
             choose_ds = data.split('<option value="')[1].split('"')[0]
-            sd = time.strftime("%Y-%m-%d 00:00:00",time.localtime(time.time()+32*3600))
-            ed = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+32*3600))
+            if int(nowday[11:13]) < 20:
+                sd = time.strftime("%Y-%m-%d 00:00:00",time.localtime(time.time()+32*3600))
+                ed = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+32*3600))
+                start_day = 2
+            else:
+                sd = time.strftime("%Y-%m-%d 00:00:00",time.localtime(time.time()+8*3600))
+                ed = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+8*3600))
+                start_day = 1
             post_data = cross_campus_data + [
                 ("_token", token),
                 ("start_date", sd),
@@ -117,7 +123,7 @@ class Report(object):
                 ("xck_time", xck_time), 
                 ("akm_time", akm_time), 
                 ("hs2_time", hs2_time), 
-                ("start_day", "2"), 
+                ("start_day", start_day), 
             ]
             post = self.login.session.post(
                 "https://weixine.ustc.edu.cn/2020/stayinout_apply",
