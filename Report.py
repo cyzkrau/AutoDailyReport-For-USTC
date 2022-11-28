@@ -8,6 +8,7 @@ end_date = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+8*3600))
 nowday = time.mktime(time.strptime(end_date, "%Y-%m-%d %H:%M:%S"))
 monday = time.mktime(time.strptime("2017-01-01 23:59:59", "%Y-%m-%d %H:%M:%S"))
 today = int(nowday - monday) // (24 * 3600) % 7
+nowday = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()+8*3600))
 
 class Report(object):
 
@@ -102,7 +103,8 @@ class Report(object):
             hs2_time = soup.find("input", {"name": "hs2_time"})["value"]
             token = soup.find("input", {"name": "_token"})["value"]
             choose_ds = data.split('<option value="')[1].split('"')[0]
-            if int(nowday[11:13]) < 20:
+            print(nowday[11:13])
+            if int(nowday[11:13]) >= 20:
                 sd = time.strftime("%Y-%m-%d 00:00:00",time.localtime(time.time()+32*3600))
                 ed = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+32*3600))
                 start_day = 2
