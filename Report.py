@@ -104,7 +104,7 @@ class Report(object):
             token = soup.find("input", {"name": "_token"})["value"]
             choose_ds = data.split('<option value="')[1].split('"')[0]
             print(nowday[11:13])
-            if int(nowday[11:13]) >= 20:
+            if int(nowday[11:13]) >= 12:
                 sd = time.strftime("%Y-%m-%d 00:00:00",time.localtime(time.time()+32*3600))
                 ed = time.strftime("%Y-%m-%d 23:59:59",time.localtime(time.time()+32*3600))
                 start_day = 2
