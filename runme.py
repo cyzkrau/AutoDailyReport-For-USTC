@@ -32,9 +32,9 @@ out_school_data = [
     ("return_college[]", "包河区"),  # 目的地
     ("return_college[]", "瑶海区"),  # 目的地
     ("return_college[]", "庐阳区"),  # 目的地
-    ("reason", "玩"),  # 原因
+    ("reason", "校内上课/考试"),      # 原因
+    ("comment", ""),  # 原因
 ]
-apply_reason = ("reason", "校内上课/考试")
 number = "187****5065"
 course = ["泛函分析", "组合", "拓扑"]
 croos_campus_dates = [1, 2, 3, 4, 5, 6, 7] # 申请跨校区的星期
@@ -52,7 +52,8 @@ if __name__ == "__main__":
         if '在校' != state[:2]:
             print("NOW STATE " + state)
             exit(0)
-        work = autorepoter.report(report_data) & autorepoter.upload_code(number)
+        # work = autorepoter.report(report_data) & autorepoter.upload_code(number)
+        work = autorepoter.report(report_data)
 
         try:
             # work = work & autorepoter.cross_campus(cross_campus_data)
@@ -62,7 +63,6 @@ if __name__ == "__main__":
             if today % 7 + 1 in croos_campus_dates:
                 print("Apply")
                 cross_campus_data[-1] = ("comment", "上" + random.sample(course, 1)[0] + "课")
-                cross_campus_data.append(apply_reason)
                 print(cross_campus_data)
                 work = autorepoter.apply_cross_campus(cross_campus_data)
             

@@ -194,7 +194,7 @@ class Report(object):
                 return True
             else:
                 print("out school failed")
-                print(data)
+                print(post_data)
                 return False
         print("login failed")
         return False
