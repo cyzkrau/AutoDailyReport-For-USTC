@@ -45,6 +45,7 @@ if __name__ == "__main__":
     parser.add_argument("stuid", help="your student number", type=str)
     parser.add_argument("password", help="your CAS password", type=str)
     args = parser.parse_args()
+    exit(0)
     autorepoter = Report(stuid=args.stuid, password=args.password)
     count = 5
     while count != 0:
